@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SmartLife — Sign In</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body class="min-h-dvh bg-accent-500/90 bg-blend-multiply">
+  <main class="container max-w-6xl py-12">
+    <section class="bg-white/95 backdrop-blur rounded-3xl shadow-card p-8 md:p-12">
+      <div class="grid md:grid-cols-2 gap-10">
+        <!-- form left -->
+        <div>
+          <h1 class="text-3xl font-semibold mb-8">Sign In</h1>
+
+          <form id="loginForm" class="grid gap-5">
+            <label class="grid gap-1">
+              <span class="text-sm">Username</span>
+              <div class="relative">
+                <input name="username" class="field w-full pl-10" placeholder="Enter Username" required />
+                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" aria-hidden="true">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5">
+                    <circle cx="12" cy="8" r="3.2" />
+                    <path d="M6 20a6 6 0 0 1 12 0" />
+                  </svg>
+                </span>
+              </div>
+            </label>
+
+            <label class="grid gap-1">
+              <span class="text-sm">Password</span>
+              <div class="relative">
+                <input name="password" type="password" class="field w-full pl-10" placeholder="Enter Password" required />
+                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" aria-hidden="true">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5">
+                    <rect x="6.5" y="11" width="11" height="9" rx="2" />
+                    <path d="M8.5 11V8.5a3.5 3.5 0 0 1 7 0V11" />
+                    <path d="M12 15v3" />
+                  </svg>
+                </span>
+              </div>
+            </label>
+
+            <label class="inline-flex items-center gap-2 text-sm">
+              <input type="checkbox" name="remember" />
+              <span>Remember Me</span>
+            </label>
+
+            <button class="btn-primary w-28">Login</button>
+
+            <div class="text-sm text-gray-600">Or, Login with</div>
+            <div class="flex items-center gap-3 text-xl">
+              <button type="button" class="btn btn-outline">f</button>
+              <button type="button" class="btn btn-outline">G</button>
+              <button type="button" class="btn btn-outline">X</button>
+            </div>
+
+            <p class="text-sm text-gray-600">
+              Don’t have an account?
+              <a class="underline text-accent-500" href="/pages/register.html">Create One</a>
+            </p>
+
+            <p id="loginError" class="text-sm text-danger-500 hidden">Invalid username or password.</p>
+          </form>
+        </div>
+
+        <!-- illustration right -->
+        <div class="hidden md:flex items-center justify-center">
+          <img src="images/Login.png"
+               alt="auth-illustration" class="w-full max-w-md rounded-2xl object-cover shadow-card">
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="/src/pages/login.js"></script>
+</body>
+</html>
