@@ -50,7 +50,7 @@ const content = `
 
 renderLayout({ active: "pomodoro", content });
 
-/* ---------- TIMER LOGIC ---------- */
+
 const $ = (s) => document.querySelector(s);
 const circle = $("#progress");
 const circumference = 2 * Math.PI * 120;
@@ -65,7 +65,7 @@ if (state.status === "running") {
   startTicking();
 }
 
-/* ---------- BUTTON EVENTS ---------- */
+
 $("#start").addEventListener("click", () => {
   clearTimeout(completionTimeout);
   completionTimeout = null;
@@ -116,7 +116,7 @@ window.addEventListener("sl:pomodoro", () => {
   }
 });
 
-/* ---------- HELPERS ---------- */
+
 function applyState(next) {
   state = { ...next };
   const config = getModeConfig(state.mode);

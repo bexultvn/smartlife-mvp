@@ -1,6 +1,5 @@
 import { renderLayout, showConfirm } from "/src/js/layout.js";
 
-/* ---------- localStorage demo ---------- */
 const LS_DOCS = "sl_conspects";
 const LS_FOLDERS = "sl_conspect_folders";
 const LS_EDITOR_ZOOM = "sl_conspectus_zoom";
