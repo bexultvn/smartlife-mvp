@@ -3,12 +3,31 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script>
+    (() => {
+      const THEME_STORAGE_KEY = "sl_theme_preference";
+      const allowed = ["light", "dark"];
+      let theme = "light";
+      try {
+        const stored = localStorage.getItem(THEME_STORAGE_KEY);
+        if (allowed.includes(stored)) {
+          theme = stored;
+        } else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
+          theme = "dark";
+        }
+      } catch (error) {
+        theme = "light";
+      }
+      document.documentElement.setAttribute("data-theme", theme);
+      document.documentElement.style.colorScheme = theme === "dark" ? "dark" : "light";
+    })();
+  </script>
   <title>SmartLife — Sign Up</title>
   <link rel="stylesheet" href="/styles.css" />
 </head>
-<body class="min-h-dvh bg-accent-500/90 bg-blend-multiply">
+<body class="min-h-dvh auth-shell">
   <main class="container max-w-6xl py-12">
-    <section class="bg-white/95 backdrop-blur rounded-3xl shadow-card p-8 md:p-12">
+    <section class="auth-card bg-white/95 backdrop-blur rounded-3xl shadow-card p-8 md:p-12">
       <div class="grid md:grid-cols-2 gap-10">
         <!-- illustration left -->
         <div class="hidden md:flex items-center justify-center">
@@ -18,7 +37,23 @@
 
         <!-- form right -->
         <div>
-          <h1 class="text-3xl font-semibold mb-8">Sign Up</h1>
+          <div class="flex items-start justify-between gap-4 mb-8">
+            <h1 class="text-3xl font-semibold">Sign Up</h1>
+            <button type="button" class="pill bg-white/80 border border-gray-200 shadow-sm text-sm" data-theme-toggle aria-label="Switch to dark mode">
+              <span data-theme-icon="light" class="text-amber-500">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+                  <circle cx="12" cy="12" r="4" />
+                  <path d="M12 2v2m0 16v2m10-10h-2M4 12H2m15.5 6.5-1.4-1.4m-8.2 0-1.4 1.4m0-13 1.4 1.4m8.2 0 1.4-1.4" />
+                </svg>
+              </span>
+              <span data-theme-icon="dark" class="text-blue-200 hidden">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+                  <path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8Z" />
+                </svg>
+              </span>
+              <span class="hidden md:inline" data-theme-label>Light</span>
+            </button>
+          </div>
 
           <form id="registerForm" class="grid gap-5">
             <label class="grid gap-1">

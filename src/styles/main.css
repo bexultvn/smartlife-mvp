@@ -64,6 +64,29 @@ html[data-theme="dark"] .sl-sidebar button {
   color: inherit;
 }
 
+.auth-shell {
+  background:
+    radial-gradient(circle at 18% 20%, rgba(59, 130, 246, 0.28) 0, transparent 30%),
+    radial-gradient(circle at 82% 12%, rgba(14, 165, 233, 0.18) 0, transparent 26%),
+    linear-gradient(135deg, #e0f2fe 0%, #e5e7eb 40%, #f8fafc 100%);
+  color: var(--sl-text);
+  transition: background 0.35s ease, color 0.35s ease;
+}
+
+html[data-theme="dark"] .auth-shell {
+  background:
+    radial-gradient(circle at 18% 20%, rgba(59, 130, 246, 0.16) 0, transparent 30%),
+    radial-gradient(circle at 82% 12%, rgba(14, 165, 233, 0.12) 0, transparent 26%),
+    linear-gradient(135deg, #0f172a 0%, #0b1627 48%, #0a1120 100%);
+}
+
+.auth-card {
+  background-color: var(--sl-surface-strong);
+  border-color: var(--sl-border);
+  color: inherit;
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
 @layer components {
   .btn { @apply inline-flex items-center justify-center rounded-lg px-4 py-2 transition; }
   .btn-primary { @apply btn bg-accent-500 text-white hover:opacity-90; }
