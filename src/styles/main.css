@@ -113,6 +113,9 @@ html[data-theme="dark"] .sl-sidebar button {
     background-color: rgba(15, 23, 42, 0.22);
   }
   .task-cover-size-default { @apply w-full sm:w-72 h-40; }
+  [data-task-image-root] [data-task-image-label]:not(:first-of-type) {
+    display: none;
+  }
 }
 /* donut charts */
 .ring-progress{ width:var(--ring-size,84px);height:var(--ring-size,84px);border-radius:9999px;position:relative;
