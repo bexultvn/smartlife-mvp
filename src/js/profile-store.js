@@ -1,138 +1,170 @@
+// src/js/profile-store.js
 import defaultAvatarUrl from "/src/js/stores/image.png?url";
 import { getActiveUser, updateSessionUser } from "/src/js/stores/session-store.js";
+import { apiFetch, ApiError } from "/src/js/api/http-client.js";
 
 const LEGACY_PROFILE_KEY = "sl_profile";
 const PROFILE_PREFIX = "sl_profile_";
-
 export const DEFAULT_AVATAR = defaultAvatarUrl;
 
 export const DEFAULT_PROFILE = {
-  firstName: "John",
-  lastName: "Doe",
-  username: "johndoe",
-  email: "johndoe@gmail.com",
-  avatar: DEFAULT_AVATAR,
+    firstName: "John",
+    lastName: "Doe",
+    username: "johndoe",
+    email: "johndoe@gmail.com",
+    avatar: DEFAULT_AVATAR,
 };
 
-export function getProfile(username = getActiveUsername()) {
-  const base = buildDefaultProfile(username);
-  if (!username) {
-    const legacy = readProfileFromStorage(LEGACY_PROFILE_KEY);
-    return legacy ? { ...base, ...legacy } : base;
-  }
-
-  const stored = readProfileFromStorage(profileKey(username));
-  if (stored) {
-    return { ...base, ...stored };
-  }
-
-  // fallback to legacy profile if it exists (migration path)
-  const legacy = readProfileFromStorage(LEGACY_PROFILE_KEY);
-  if (legacy) {
-    const migrated = { ...base, ...legacy, username };
-    saveProfile(migrated, username);
-    return migrated;
-  }
-
-  return base;
-}
-
-export function saveProfile(profile, username = getActiveUsername()) {
-  const data = { ...profile };
-  if (username) {
-    data.username = username;
-    localStorage.setItem(profileKey(username), JSON.stringify(data));
-    const activeUser = getActiveUser();
-    if (activeUser && activeUser.username === username) {
-      updateSessionUser({
-        firstName: data.firstName,
-        lastName: data.lastName,
-        email: data.email,
-        avatar: data.avatar,
-      });
+function cacheProfileLocally(profile) {
+    const username = profile.username?.trim();
+    if (!username) {
+        localStorage.setItem(LEGACY_PROFILE_KEY, JSON.stringify(profile));
+    } else {
+        localStorage.setItem(`${PROFILE_PREFIX}${username}`, JSON.stringify(profile));
+        // Удаляем старый кэш, если username поменялся
+        const oldKey = `${PROFILE_PREFIX}${getActiveUsername()}`;
+        if (oldKey !== `${PROFILE_PREFIX}${username}`) {
+            localStorage.removeItem(oldKey);
+        }
     }
-  } else {
-    localStorage.setItem(LEGACY_PROFILE_KEY, JSON.stringify(data));
-  }
 }
 
-export function ensureProfileForUser(user = {}) {
-  const username = (user.username || "").trim();
-  if (!username) return;
-
-  const existing = readProfileFromStorage(profileKey(username)) || {};
-  const serverAvatar = normalizeAvatar(user.avatar);
-  const existingAvatar = normalizeAvatar(existing.avatar);
-  const hasCustomAvatar =
-    existingAvatar && existingAvatar !== normalizeAvatar(DEFAULT_AVATAR);
-  const nextAvatar = hasCustomAvatar
-    ? existingAvatar
-    : serverAvatar || DEFAULT_AVATAR;
-
-  if (user && Object.keys(user).length) {
-    updateSessionUser({
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
-      avatar: nextAvatar,
-    });
-  }
-
-  const merged = {
-    ...buildDefaultProfile(username),
-    ...existing,
-    avatar: nextAvatar,
-  };
-
-  if (user.firstName) merged.firstName = user.firstName;
-  if (user.lastName) merged.lastName = user.lastName;
-  if (user.email) merged.email = user.email;
-  merged.username = username;
-
-  saveProfile(merged, username);
-}
-
-function readProfileFromStorage(key) {
-  try {
+function readProfileFromStorage(username) {
+    if (!username) {
+        const legacy = localStorage.getItem(LEGACY_PROFILE_KEY);
+        return legacy ? JSON.parse(legacy) : null;
+    }
+    const key = `${PROFILE_PREFIX}${username}`;
     const raw = localStorage.getItem(key);
-    if (!raw) return null;
-    return JSON.parse(raw);
-  } catch (err) {
-    console.warn("Failed to parse profile from localStorage", err);
-    return null;
-  }
+    return raw ? JSON.parse(raw) : null;
 }
 
-function profileKey(username) {
-  return `${PROFILE_PREFIX}${username}`;
+// ГЛАВНОЕ ИЗМЕНЕНИЕ: больше НЕ перезаписываем username старым значением
+export async function saveProfile(profile) {
+    const data = { ...profile };
+    // УДАЛИЛИ эту строку → data.username = getActiveUsername();
+
+    try {
+        const updatedFromServer = await apiFetch("/auth/me", {
+            method: "PUT",
+            body: data,
+        });
+
+        const newUsername = updatedFromServer.username?.trim();
+
+        // Кэшируем под НОВЫМ username
+        cacheProfileLocally(updatedFromServer);
+
+        // Обновляем сессию — включая новый username!
+        updateSessionUser({
+            username: newUsername,
+            firstName: updatedFromServer.firstName,
+            lastName: updatedFromServer.lastName,
+            email: updatedFromServer.email,
+            avatar: normalizeAvatar(updatedFromServer.avatar),
+        });
+
+        return updatedFromServer;
+    } catch (err) {
+        console.error("Ошибка сохранения профиля", err);
+        if (err instanceof ApiError && err.status === 0) {
+            cacheProfileLocally(data); // оффлайн
+        }
+        throw err;
+    }
 }
 
-export function getActiveUsername() {
-  const user = getActiveUser();
-  return user?.username || null;
+// Чтение профиля — ищем по текущему username из сессии
+export function getProfile() {
+    const username = getActiveUser()?.username;
+    const base = buildDefaultProfile();
+
+    const stored = readProfileFromStorage(username) || readProfileFromStorage(null); // legacy fallback
+    if (stored) {
+        return { ...base, ...stored };
+    }
+    return base;
 }
 
-function buildDefaultProfile(username) {
-  const activeUser = getActiveUser();
-  const targetUsername = username || activeUser?.username || DEFAULT_PROFILE.username;
-  const base = {
-    ...DEFAULT_PROFILE,
-    username: targetUsername,
-  };
+// Подтягиваем с сервера — используем актуальный username из ответа
+export async function fetchProfileFromServer() {
+    try {
+        const serverProfile = await apiFetch("/auth/me", { method: "GET" });
 
-  if (activeUser && activeUser.username === targetUsername) {
-    return {
-      ...base,
-      firstName: activeUser.firstName || base.firstName,
-      lastName: activeUser.lastName || base.lastName,
-      email: activeUser.email || base.email,
-      avatar: activeUser.avatar || base.avatar,
+        const normalized = {
+            ...serverProfile,
+            avatar: normalizeAvatar(serverProfile.avatar),
+        };
+
+        cacheProfileLocally(normalized);
+
+        updateSessionUser({
+            username: serverProfile.username,
+            firstName: serverProfile.firstName,
+            lastName: serverProfile.lastName,
+            email: serverProfile.email,
+            avatar: normalized.avatar,
+        });
+
+        return normalized;
+    } catch (err) {
+        console.warn("Не удалось загрузить профиль с сервера", err);
+        return getProfile();
+    }
+}
+
+// ensureProfileForUser теперь тоже не ломает username
+export async function ensureProfileForUser(user = {}) {
+    const serverUsername = user.username?.trim();
+    if (!serverUsername) return;
+
+    const existing = readProfileFromStorage(serverUsername) || {};
+    const nextAvatar = existing.avatar && existing.avatar !== DEFAULT_AVATAR
+        ? existing.avatar
+        : normalizeAvatar(user.avatar) || DEFAULT_AVATAR;
+
+    const merged = {
+        ...buildDefaultProfile(),
+        ...existing,
+        username: serverUsername,        // берём из сервера
+        firstName: user.firstName || existing.firstName,
+        lastName: user.lastName || existing.lastName,
+        email: user.email || existing.email,
+        avatar: nextAvatar,
     };
-  }
 
-  return base;
+    try {
+        await saveProfile(merged);
+    } catch {
+        updateSessionUser({
+            username: serverUsername,
+            firstName: merged.firstName,
+            lastName: merged.lastName,
+            email: merged.email,
+            avatar: merged.avatar,
+        });
+    }
 }
 
-function normalizeAvatar(value) {
-  return typeof value === "string" ? value.trim() : "";
+// Вспомогательные
+export function getActiveUsername() {
+    return getActiveUser()?.username || null;
+}
+
+function buildDefaultProfile() {
+    const user = getActiveUser();
+    if (!user) return { ...DEFAULT_PROFILE };
+
+    return {
+        ...DEFAULT_PROFILE,
+        username: user.username || DEFAULT_PROFILE.username,
+        firstName: user.firstName || DEFAULT_PROFILE.firstName,
+        lastName: user.lastName || DEFAULT_PROFILE.lastName,
+        email: user.email || DEFAULT_PROFILE.email,
+        avatar: user.avatar || DEFAULT_AVATAR,
+    };
+}
+
+export function normalizeAvatar(value) {
+    return typeof value === "string" ? value.trim() : "";
 }

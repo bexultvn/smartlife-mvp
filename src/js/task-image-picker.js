@@ -31,7 +31,7 @@ export function taskImagePickerTemplate(value = "", options = {}) {
 
   return `
     <div class="grid gap-2" data-task-image-root>
-      <span class="text-sm font-medium">${escapeHtml(label)}</span>
+      <span class="text-sm font-medium" data-task-image-label>${escapeHtml(label)}</span>
       <div class="relative ${sizeClass}">
         <button type="button"
           class="group relative block h-full w-full overflow-hidden rounded-2xl ring-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 transition"
@@ -70,6 +70,16 @@ export function setupTaskImagePicker(root, initialValue = "") {
   const preview = root.querySelector("[data-task-image-preview]");
   const trigger = root.querySelector("[data-task-image-trigger]");
   const clearBtn = root.querySelector("[data-task-image-clear]");
+
+  const labels = root.querySelectorAll("[data-task-image-label]");
+  if (labels.length > 1) {
+    labels.forEach((label, index) => {
+      if (index > 0) {
+        label.remove();
+      }
+    });
+  }
+
   if (!fileInput || !valueInput || !preview) return;
 
   const renderPreview = (src = "") => {

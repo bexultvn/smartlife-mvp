@@ -11,6 +11,8 @@ import {
   setPomodoroMode,
 } from "/src/js/pomodoro-store.js";
 import { playPomodoroAlarm } from "/src/js/pomodoro-alarm.js";
+const STORAGE_RESET_KEY = "sl_storage_reset_version";
+const STORAGE_RESET_VERSION = "1";
 const POMODORO_OVERLAY_POSITION_KEY = "sl_pomodoro_overlay_position";
 const POMODORO_OVERLAY_STATE_KEY = "sl_pomodoro_overlay_state";
 const THEME_STORAGE_KEY = "sl_theme_preference";
@@ -37,6 +39,7 @@ const iconShield = `
     <path stroke-linecap="round" stroke-linejoin="round" d="m9.6 12.2 1.8 1.9 3.2-3.4" />
   </svg>`;
 
+ensureStorageReset();
 ensureTheme();
 if (typeof window !== "undefined") {
   window.addEventListener("storage", handleThemeStorageChange);
@@ -627,6 +630,18 @@ function detectSystemTheme() {
     console.warn("Failed to detect system theme", error);
   }
   return DEFAULT_THEME;
+}
+
+function ensureStorageReset() {
+  if (typeof localStorage === "undefined") return;
+  try {
+    const currentVersion = localStorage.getItem(STORAGE_RESET_KEY);
+    if (currentVersion === STORAGE_RESET_VERSION) return;
+    localStorage.clear();
+    localStorage.setItem(STORAGE_RESET_KEY, STORAGE_RESET_VERSION);
+  } catch (error) {
+    console.warn("Failed to clear local storage", error);
+  }
 }
 
 function isValidTheme(value) {

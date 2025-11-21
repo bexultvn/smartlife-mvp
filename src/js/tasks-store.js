@@ -273,6 +273,7 @@ function normalizeTask(task, forceClone = false) {
   if (!task) return null;
   const next = forceClone ? { ...task } : task;
   if (!next.id) next.id = createId();
+  next.id = String(next.id);
   if (!next.title) next.title = "Untitled task";
   if (!next.priority) next.priority = "Moderate";
   if (!next.status) next.status = "Not Started";
