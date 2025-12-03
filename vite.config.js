@@ -1,18 +1,21 @@
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-  base: '/',  
+  base: '/',  // Абсолютные пути для деплоя (важно для assets в dist/)
   build: {
-    outDir: 'dist',  
-    emptyOutDir: true,
-    assetsDir: 'assets' 
+    outDir: 'dist',
+    emptyOutDir: true,  // Очищает dist перед билдом — аналог rm для Vite
+    assetsDir: 'assets'
   },
   css: {
     postcss: {
-      plugins: [require('tailwindcss'), require('autoprefixer')]
+      plugins: [
+        require('tailwindcss'),
+        require('autoprefixer')
+      ]
     }
   },
   server: {
-    port: 5173  
+    port: 5173
   }
 });
