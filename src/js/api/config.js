@@ -1,4 +1,4 @@
-const DEFAULT_API_BASE_URL = "http://localhost:8080/api";
+const DEFAULT_API_BASE_URL = "https://smartlife-backend-production.up.railway.app";
 const CONFIG_KEY = "__sl_cached_api_config";
 
 function normalizeBaseUrl(url) {
