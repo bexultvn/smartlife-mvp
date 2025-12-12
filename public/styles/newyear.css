@@ -64,6 +64,21 @@ html.newyear-mode:not([data-theme="dark"]) .sl-app-body {
     rgba(249, 251, 255, 0.72);
 }
 
+.newyear-mode .auth-shell {
+  position: relative;
+  background:
+    radial-gradient(circle at 10% 10%, rgba(125, 200, 255, 0.22) 0, transparent 26%),
+    radial-gradient(circle at 90% 14%, rgba(255, 255, 255, 0.18) 0, transparent 24%),
+    linear-gradient(180deg, rgba(230, 245, 255, 0.35) 0%, rgba(200, 225, 255, 0.14) 40%, rgba(249, 251, 255, 0.6) 100%);
+}
+
+.newyear-mode .auth-card {
+  background-color: rgba(246, 248, 255, 0.56);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(125, 200, 255, 0.32);
+  box-shadow: 0 28px 70px rgba(125, 200, 255, 0.18), 0 10px 26px rgba(93, 160, 240, 0.12);
+}
+
 #snow {
   position: fixed;
   inset: 0;

@@ -1,3 +1,5 @@
+import { syncNewYearTheme } from "/src/js/new-year-mode.js";
+
 const THEME_STORAGE_KEY = "sl_theme_preference";
 const DEFAULT_THEME = "light";
 const THEME_OPTIONS = ["light", "dark"];
@@ -45,6 +47,7 @@ const setTheme = (theme, { persist = true } = {}) => {
     }
   }
   updateToggleButtons(next);
+  syncNewYearTheme(next);
   return next;
 };
 

@@ -2,8 +2,10 @@ import { register } from "/src/js/api/auth.js";
 import { ApiError } from "/src/js/api/http-client.js";
 import { DEFAULT_AVATAR } from "/src/js/profile-store.js";
 import { initAuthThemeToggle } from "/src/js/auth-theme.js";
+import { initNewYearMode } from "/src/js/new-year-mode.js";
 
 initAuthThemeToggle();
+initNewYearMode();
 
 const form = document.getElementById("registerForm");
 const err = document.getElementById("regError");

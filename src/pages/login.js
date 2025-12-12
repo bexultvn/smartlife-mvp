@@ -1,8 +1,10 @@
 import { login } from "/src/js/api/auth.js";
 import { ApiError } from "/src/js/api/http-client.js";
 import { initAuthThemeToggle } from "/src/js/auth-theme.js";
+import { initNewYearMode } from "/src/js/new-year-mode.js";
 
 initAuthThemeToggle();
+initNewYearMode();
 
 const form = document.getElementById("loginForm");
 const err = document.getElementById("loginError");
