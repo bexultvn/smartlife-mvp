@@ -165,8 +165,8 @@ html.newyear-mode:not([data-theme="dark"]) .sl-app-body {
 .newyear-mode [data-brand]::after {
   content: "";
   position: absolute;
-  top: -18px;
-  left: -14px;
+  top: -20px;
+  left: -6px;
   width: 42px;
   height: 34px;
   background: url("/assets/newyear/hat.png") center / contain no-repeat;
