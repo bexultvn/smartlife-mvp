@@ -11,6 +11,7 @@ import {
   setPomodoroMode,
 } from "/src/js/pomodoro-store.js";
 import { playPomodoroAlarm } from "/src/js/pomodoro-alarm.js";
+import { initNewYearMode, newYearToggleMarkup, syncNewYearTheme } from "/src/js/new-year-mode.js";
 const STORAGE_RESET_KEY = "sl_storage_reset_version";
 const STORAGE_RESET_VERSION = "1";
 const POMODORO_OVERLAY_POSITION_KEY = "sl_pomodoro_overlay_position";
@@ -61,7 +62,7 @@ export function renderLayout({ active = "", title = "SmartLife", content = "", t
 
   if (typeof document !== "undefined" && document.body) {
     document.body.innerHTML = `
-  <div class="min-h-dvh grid md:grid-cols-[280px_1fr]">
+  <div class="sl-shell min-h-dvh grid md:grid-cols-[280px_1fr]">
     <!-- Sidebar -->
     <aside class="hidden md:flex flex-col sl-sidebar p-6 gap-6">
       <button type="button" class="flex items-center gap-3 text-left focus:ring-2 focus:ring-white/40 rounded-xl"
@@ -87,7 +88,7 @@ export function renderLayout({ active = "", title = "SmartLife", content = "", t
     <!-- Main -->
     <div class="flex flex-col min-h-dvh">
       <!-- Top toolbar -->
-      <header class="bg-white/80 backdrop-blur border-b">
+      <header class="bg-white/80 backdrop-blur border-b relative" data-main-header>
         <div class="container max-w-7xl py-4 flex items-center justify-between gap-4">
           <h1 class="text-2xl font-semibold"><span class="text-accent-500">Smart</span>Life</h1>
           <div class="flex-1 mx-6 hidden md:block">
@@ -96,7 +97,8 @@ export function renderLayout({ active = "", title = "SmartLife", content = "", t
               <span class="absolute left-3 top-1/2 -translate-y-1/2 opacity-50">${tweakIconSize(ICONS.search,"h-4 w-4")}</span>
             </label>
           </div>
-          <div class="flex items-center gap-3 text-sm">
+          <div class="flex items-center gap-2 text-sm flex-wrap justify-end">
+            ${newYearToggleMarkup()}
             <button type="button" class="pill bg-white border" data-theme-toggle aria-label="${toggleAriaLabel}">
               <span data-theme-icon="light" class="${lightIconClass}">${sunIcon}</span>
               <span data-theme-icon="dark" class="${darkIconClass}">${moonIcon}</span>
@@ -129,6 +131,7 @@ export function renderLayout({ active = "", title = "SmartLife", content = "", t
   initPomodoroOverlay(active);
   initGlobalSearch();
   initThemeToggle();
+  initNewYearMode();
 }
 
 
@@ -586,6 +589,7 @@ function setTheme(theme, { persist = true } = {}) {
     }
   }
   updateThemeToggleButtons();
+  syncNewYearTheme(next);
   return next;
 }
 
