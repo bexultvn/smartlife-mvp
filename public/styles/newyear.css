@@ -1,6 +1,6 @@
 :root.newyear-mode,
 html.newyear-mode {
-  --ny-snow-color: #d6ecff;
+  --ny-snow-color: #b8deff;
   --ny-accent: #7dc8ff;
   --sl-bg: #f9fbff;
   --sl-text: #0f172a;
@@ -58,14 +58,10 @@ html.newyear-mode .sl-app-body {
   background: linear-gradient(180deg, rgba(125, 200, 255, 0.12) 0%, transparent 42%), var(--sl-bg);
 }
 
-html.newyear-mode .card {
-  box-shadow: 0 12px 32px rgba(0, 61, 112, 0.12), 0 4px 14px rgba(93, 200, 255, 0.12);
-  border-color: var(--sl-border);
-}
-
-html.newyear-mode .btn-primary {
-  box-shadow: 0 10px 26px rgba(125, 200, 255, 0.32);
-  filter: drop-shadow(0 10px 18px rgba(125, 200, 255, 0.3));
+html.newyear-mode:not([data-theme="dark"]) .sl-app-body {
+  background:
+    linear-gradient(180deg, rgba(230, 245, 255, 0.65) 0%, rgba(230, 245, 255, 0.2) 40%, transparent 70%),
+    rgba(249, 251, 255, 0.72);
 }
 
 #snow {
@@ -92,6 +88,8 @@ html.newyear-mode .btn-primary {
   object-fit: contain;
   animation: glow 2s infinite ease-in-out;
   image-rendering: optimizeQuality;
+  filter: drop-shadow(0 6px 18px rgba(255, 255, 255, 0.92)) saturate(1.3) brightness(1.08);
+  opacity: 0.98;
 }
 
 .newyear-garland-anchored {
@@ -154,4 +152,102 @@ html.newyear-mode .btn-primary {
     left: 4px;
     width: 60%;
   }
+}
+
+.newyear-mode [data-brand] {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding-left: 6px;
+}
+
+.newyear-mode [data-brand]::after {
+  content: "";
+  position: absolute;
+  top: -18px;
+  left: -14px;
+  width: 42px;
+  height: 34px;
+  background: url("/assets/newyear/hat.png") center / contain no-repeat;
+  transform: rotate(-12deg);
+  pointer-events: none;
+  filter: drop-shadow(0 8px 10px rgba(0, 0, 0, 0.2));
+  z-index: 2;
+}
+
+.newyear-mode [data-brand]::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 30% 30%, #e3f6ff 0, #7dc8ff 60%, rgba(125, 200, 255, 0.1) 100%);
+  box-shadow:
+    0 0 12px rgba(125, 200, 255, 0.9),
+    0 0 18px rgba(125, 200, 255, 0.4);
+  animation: glow 2.2s infinite ease-in-out;
+}
+
+html.newyear-mode .card {
+  box-shadow: 0 12px 32px rgba(0, 61, 112, 0.12), 0 4px 14px rgba(93, 200, 255, 0.12);
+  border-color: var(--sl-border);
+}
+
+html.newyear-mode:not([data-theme="dark"]) .card,
+html.newyear-mode:not([data-theme="dark"]) .field,
+html.newyear-mode:not([data-theme="dark"]) .bg-white {
+  background-color: rgba(246, 248, 255, 0.58) !important;
+  backdrop-filter: blur(18px);
+  border-color: rgba(125, 200, 255, 0.28) !important;
+  box-shadow: 0 26px 70px rgba(125, 200, 255, 0.18), 0 10px 28px rgba(93, 160, 240, 0.12);
+}
+html.newyear-mode:not([data-theme="dark"]) [class*="bg-white/"] {
+  background-color: rgba(246, 248, 255, 0.52) !important;
+  backdrop-filter: blur(18px);
+  border-color: rgba(125, 200, 255, 0.22) !important;
+  box-shadow: 0 22px 64px rgba(125, 200, 255, 0.16), 0 8px 22px rgba(93, 160, 240, 0.1);
+}
+
+html.newyear-mode:not([data-theme="dark"]) .bg-white\/80,
+html.newyear-mode:not([data-theme="dark"]) .bg-white\/70,
+html.newyear-mode:not([data-theme="dark"]) .bg-gray-50,
+html.newyear-mode:not([data-theme="dark"]) .bg-gray-50\/40,
+html.newyear-mode:not([data-theme="dark"]) .bg-slate-50,
+html.newyear-mode:not([data-theme="dark"]) .bg-slate-50\/70,
+html.newyear-mode:not([data-theme="dark"]) .bg-gray-100 {
+  background-color: rgba(246, 248, 255, 0.5) !important;
+  backdrop-filter: blur(18px);
+  border-color: rgba(125, 200, 255, 0.2) !important;
+  box-shadow: 0 20px 60px rgba(125, 200, 255, 0.14), 0 7px 18px rgba(93, 160, 240, 0.09);
+}
+
+html.newyear-mode:not([data-theme="dark"]) .sl-sidebar {
+  background: linear-gradient(180deg, rgba(59, 130, 246, 0.78) 0%, rgba(37, 99, 235, 0.82) 100%);
+  backdrop-filter: blur(6px);
+  color: #f8fafc;
+}
+
+html.newyear-mode:not([data-theme="dark"]) .sl-sidebar a,
+html.newyear-mode:not([data-theme="dark"]) .sl-sidebar button {
+  color: #f8fafc;
+}
+
+html.newyear-mode:not([data-theme="dark"]) .sl-sidebar a:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+html.newyear-mode:not([data-theme="dark"]) .pill {
+  background-color: transparent !important;
+  backdrop-filter: none;
+  border-color: rgba(125, 200, 255, 0.32) !important;
+}
+
+html.newyear-mode .btn-primary {
+  box-shadow: 0 10px 26px rgba(125, 200, 255, 0.32);
+  filter: drop-shadow(0 10px 18px rgba(125, 200, 255, 0.3));
+}
+
+html.newyear-mode:not([data-theme="dark"]) .newyear-garland img {
+  filter: drop-shadow(0 6px 20px rgba(255, 255, 255, 1)) saturate(1.45) brightness(1.12);
+  opacity: 1;
 }

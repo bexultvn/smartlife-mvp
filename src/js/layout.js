@@ -90,7 +90,7 @@ export function renderLayout({ active = "", title = "SmartLife", content = "", t
       <!-- Top toolbar -->
       <header class="bg-white/80 backdrop-blur border-b relative" data-main-header>
         <div class="container max-w-7xl py-4 flex items-center justify-between gap-4">
-          <h1 class="text-2xl font-semibold"><span class="text-accent-500">Smart</span>Life</h1>
+          <h1 class="text-2xl font-semibold sl-brand" data-brand><span class="text-accent-500">Smart</span>Life</h1>
           <div class="flex-1 mx-6 hidden md:block">
             <label class="relative block">
               <input id="globalSearch" type="search" placeholder="Search your task here..." class="w-full field pl-10" />

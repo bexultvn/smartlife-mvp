@@ -14,17 +14,15 @@ export function getNewYearMode() {
 }
 
 export function newYearToggleMarkup(enabled = getNewYearMode()) {
-  const label = enabled ? "On" : "Off";
   const aria = enabled ? "Disable New Year mode" : "Enable New Year mode";
   return `
     <button type="button"
-      class="pill bg-white border text-xs md:text-sm shadow-sm"
+      class="pill bg-white border text-sm shadow-sm"
       data-newyear-toggle
       aria-pressed="${enabled}"
       aria-label="${aria}">
       <span aria-hidden="true">🎄</span>
-      <span class="hidden sm:inline">New Year Mode:</span>
-      <span data-newyear-label class="font-semibold">${label}</span>
+      <span class="hidden sm:inline">New Year Mode</span>
     </button>
   `;
 }
@@ -103,10 +101,6 @@ function bindToggleButtons() {
 function updateToggleButtons() {
   const enabled = getNewYearMode();
   document.querySelectorAll(TOGGLE_SELECTOR).forEach((btn) => {
-    const labelEl = btn.querySelector("[data-newyear-label]");
-    if (labelEl) {
-      labelEl.textContent = enabled ? "On" : "Off";
-    }
     btn.setAttribute("aria-pressed", String(enabled));
     btn.setAttribute("aria-label", enabled ? "Disable New Year mode" : "Enable New Year mode");
   });
