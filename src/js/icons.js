@@ -34,6 +34,11 @@ const ICONS = {
     <path d="M9 13h6" />
     <path d="M9 17h4" />
   `),
+  download: svg(`
+    <path d="M12 4.5v10" />
+    <path d="m7.5 10.5 4.5 4.5 4.5-4.5" />
+    <path d="M5 19h14" />
+  `),
   settings: svg(`
     <circle cx="12" cy="12" r="3.2" />
     <path d="M12 4v2" />

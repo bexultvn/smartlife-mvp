@@ -19,6 +19,7 @@ const POMODORO_OVERLAY_STATE_KEY = "sl_pomodoro_overlay_state";
 const THEME_STORAGE_KEY = "sl_theme_preference";
 const DEFAULT_THEME = "light";
 const THEME_OPTIONS = ["light", "dark"];
+const MOBILE_APP_URL = "/downloads/app-debug.apk"; // Update when the APK path is ready.
 let currentTheme = null;
 
 const tweakIconSize = (icon, sizeClass = "h-5 w-5") =>
@@ -55,6 +56,11 @@ export function renderLayout({ active = "", title = "SmartLife", content = "", t
   const toggleAriaLabel = theme === "dark" ? "Switch to light mode" : "Switch to dark mode";
   const lightIconClass = theme === "light" ? "" : "hidden";
   const darkIconClass = theme === "dark" ? "" : "hidden";
+  const mobileAppButton = `
+    <a href="${MOBILE_APP_URL}" class="fixed right-4 bottom-4 md:right-6 md:bottom-6 z-[5000] inline-flex items-center gap-2 px-4 py-3 rounded-full bg-white text-accent-600 border border-accent-100 shadow-card hover:shadow-lg transition transform hover:translate-y-[-2px] focus:outline-none focus:ring-4 focus:ring-accent-100" download data-mobile-app-install>
+      ${tweakIconSize(ICONS.download,"h-4 w-4")}<span class="hidden sm:inline font-semibold">Install Mobile App</span><span class="sm:hidden text-sm">Install App</span>
+    </a>
+  `;
 
   if (typeof document !== "undefined" && document.body) {
     document.body.classList.add("min-h-dvh", "sl-app-body");
@@ -82,6 +88,9 @@ export function renderLayout({ active = "", title = "SmartLife", content = "", t
       </nav>
       <a href="/pages/login.html" class="mt-auto inline-flex items-center gap-2 text-white/90 hover:text-white">
         ${tweakIconSize(ICONS.logout,"h-4 w-4")}<span>Logout</span>
+      </a>
+      <a href="${MOBILE_APP_URL}" class="inline-flex items-center justify-center gap-2 rounded-xl px-4 py-3 bg-white/10 text-white hover:text-white hover:bg-white/15 transition shadow-soft" download data-mobile-app-install>
+        ${tweakIconSize(ICONS.download,"h-4 w-4")}<span class="font-semibold">Install Mobile App</span>
       </a>
     </aside>
 
@@ -123,6 +132,7 @@ export function renderLayout({ active = "", title = "SmartLife", content = "", t
   </div>
   ${profileSettingsPanel(profile)}
   ${calendarModal()}
+  ${mobileAppButton}
   `;
   }
 
